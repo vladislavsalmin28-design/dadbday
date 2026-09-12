@@ -112,7 +112,7 @@
     <div id="maze-section">
       <h2 class="maze-title">🎮 А теперь пройди лабиринт, чтобы забрать приз!</h2>
       <div id="maze-container">
-        <canvas id="mazeCanvas" width="280" height="280"></canvas>
+        <canvas id="mazeCanvas" width="300" height="300"></canvas>
         <div class="controls">
           <button class="btn btn-up" onclick="move(0, -1)">▲</button>
           <button class="btn btn-left" onclick="move(-1, 0)">◀</button>
@@ -129,18 +129,27 @@
   </div>
 
   <script>
+    // Увеличенный и усложнённый лабиринт (15x15)
     const maze = [
-      [1, 1, 1, 1, 1, 1, 1],
-      [1, 0, 0, 0, 1, 0, 1],
-      [1, 1, 1, 0, 1, 0, 1],
-      [1, 0, 0, 0, 0, 0, 1],
-      [1, 0, 1, 1, 1, 0, 1],
-      [1, 0, 0, 0, 1, 2, 1],
-      [1, 1, 1, 1, 1, 1, 1]
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+      [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+      [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+      [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+      [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+      [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+      [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+      [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+      [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+      [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 2, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
 
     let player = { x: 1, y: 1 };
-    const tileSize = 40;
+    const tileSize = 20;
     const canvas = document.getElementById('mazeCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -155,14 +164,14 @@
             ctx.fillStyle = '#ff79c6';
             ctx.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
             ctx.fillStyle = '#fff';
-            ctx.font = '20px sans-serif';
-            ctx.fillText('🎁', c * tileSize + 8, r * tileSize + 28);
+            ctx.font = '14px sans-serif';
+            ctx.fillText('🎁', c * tileSize + 2, r * tileSize + 15);
           }
         }
       }
       ctx.fillStyle = '#50fa7b';
       ctx.beginPath();
-      ctx.arc(player.x * tileSize + tileSize/2, player.y * tileSize + tileSize/2, tileSize/3, 0, Math.PI * 2);
+      ctx.arc(player.x * tileSize + tileSize/2, player.y * tileSize + tileSize/2, tileSize/2.5, 0, Math.PI * 2);
       ctx.fill();
     }
 
