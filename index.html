@@ -1,4 +1,134 @@
-// Сетка лабиринта (1 = стена, 0 = проход, 2 = финиш)
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>С Днём Рождения, Папа!</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #282a36;
+      border: 2px solid #ffb86c;
+      border-radius: 16px;
+      padding: 25px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    h1 {
+      color: #ffb86c;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+    p.text {
+      color: #f8f8f2;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .accent { color: #f1fa8c; font-weight: bold; }
+    h2.maze-title {
+      font-size: 18px;
+      color: #8be9fd;
+      margin-bottom: 15px;
+    }
+    #maze-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    canvas {
+      border: 3px solid #6272a4;
+      border-radius: 8px;
+      background: #191a21;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(3, 50px);
+      grid-gap: 5px;
+      margin-top: 10px;
+    }
+    .btn {
+      background: #44475a;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .btn:active { background: #ff79c6; }
+    .btn-up { grid-column: 2; }
+    .btn-left { grid-column: 1; grid-row: 2; }
+    .btn-down { grid-column: 2; grid-row: 2; }
+    .btn-right { grid-column: 3; grid-row: 2; }
+
+    #reward {
+      display: none;
+      margin-top: 20px;
+      animation: fadeIn 1s forwards;
+    }
+    #reward img {
+      width: 100%;
+      border-radius: 12px;
+      border: 3px solid #ffb86c;
+      box-shadow: 0 5px 20px rgba(255, 184, 108, 0.4);
+    }
+    .caption {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #f1fa8c;
+      font-weight: bold;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>👑 Дорогой папа, у тебя сегодня день рождения...</h1>
+    <p class="text">
+      Поздравляю тебя с началом нового года, желаю тебе много <span class="accent">золота</span> и <span class="accent">серебра</span>, но золота побольше все таки! ✨<br><br>
+      Желаю поменьше терять кольца 💍, и находить только радость и счастье!
+    </p>
+
+    <div id="maze-section">
+      <h2 class="maze-title">🎮 А теперь пройди лабиринт, чтобы забрать приз!</h2>
+      <div id="maze-container">
+        <canvas id="mazeCanvas" width="280" height="280"></canvas>
+        <div class="controls">
+          <button class="btn btn-up" onclick="move(0, -1)">▲</button>
+          <button class="btn btn-left" onclick="move(-1, 0)">◀</button>
+          <button class="btn btn-down" onclick="move(0, 1)">▼</button>
+          <button class="btn btn-right" onclick="move(1, 0)">▶</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="reward">
+      <img id="prize-img" src="https://i.ibb.co/kVKDm00p/image.png" alt="Приз">
+      <p class="caption">желаю клевых золотых часов, клевых золотых очков и бомбезной баньки 🔥🕶️⌚</p>
+    </div>
+  </div>
+
+  <script>
     const maze = [
       [1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 1, 0, 1],
@@ -30,7 +160,6 @@
           }
         }
       }
-      // Игрок
       ctx.fillStyle = '#50fa7b';
       ctx.beginPath();
       ctx.arc(player.x * tileSize + tileSize/2, player.y * tileSize + tileSize/2, tileSize/3, 0, Math.PI * 2);
@@ -63,10 +192,10 @@
     }
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowUp'  e.key === 'w') move(0, -1);
-      if (e.key === 'ArrowDown'  e.key === 's') move(0, 1);
-      if (e.key === 'ArrowLeft'  e.key === 'a') move(-1, 0);
-      if (e.key === 'ArrowRight'  e.key === 'd') move(1, 0);
+      if (e.key === 'ArrowUp' || e.key === 'w') move(0, -1);
+      if (e.key === 'ArrowDown' || e.key === 's') move(0, 1);
+      if (e.key === 'ArrowLeft' || e.key === 'a') move(-1, 0);
+      if (e.key === 'ArrowRight' || e.key === 'd') move(1, 0);
     });
 
     drawMaze();
